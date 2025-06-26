@@ -1,0 +1,812 @@
+MongoDB Datatypes
+
+mongosh
+Current Mongosh Log ID: 67053584171fd2b421c73bf7
+Connecting to:          mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.3.1
+Using MongoDB:          8.0.0
+Using Mongosh:          2.3.1
+
+For mongosh info see: https://www.mongodb.com/docs/mongodb-shell/
+
+------
+   The server generated these startup warnings when booting
+   2024-10-01T07:10:35.705+05:30: Access control is not enabled for the database. Read and write access to data and configuration is unrestricted
+------
+
+test> // today we are going to learn all about the datatypes present in the mongodb
+
+test> /*
+... objectId
+... String
+... Integer
+... Double
+... Boolean
+... Array
+... Object Document
+... */
+
+test> // we can store all the types of data as we have seen above
+
+test> db.test.insertOne({date: new Date})
+{
+  acknowledged: true,
+  insertedId: ObjectId('67053843171fd2b421c73bf8')
+}
+test> db.test.find()
+[
+  {
+    _id: ObjectId('67053843171fd2b421c73bf8'),
+    date: ISODate('2024-10-08T13:48:51.105Z')
+  }
+]
+test> //we see the date data type above
+
+test> db.test.insertOne({TS: new Timestamp()})
+{
+  acknowledged: true,
+  insertedId: ObjectId('67053895171fd2b421c73bf9')
+}
+test> db.test.find()
+[
+  {
+    _id: ObjectId('67053843171fd2b421c73bf8'),
+    date: ISODate('2024-10-08T13:48:51.105Z')
+  },
+  {
+    _id: ObjectId('67053895171fd2b421c73bf9'),
+    TS: Timestamp({ t: 1728395413, i: 1 })
+  }
+]
+test> // now we have seen about the date and timestamp data type
+
+Relational Operatorsshubham> db.cars.find()
+[
+  {
+    _id: ObjectId('670540b95a84be859ec73bf8'),
+    maker: 'Hyundai',
+    model: 'Creta',
+    fuel_type: 'Diesel',
+    transmission: 'Manual',
+    engine: { type: 'Naturally Aspirated', cc: 1493, torque: '250 Nm' },
+    features: [
+      'Sunroof',
+      'Leather Seats',
+      'Wireless Charging',
+      'Ventilated Seats',
+      'Bluetooth'
+    ],
+    sunroof: true,
+    airbags: 6
+  },
+  {
+    _id: ObjectId('670540b95a84be859ec73bf9'),
+    maker: 'Maruti Suzuki',
+    model: 'Baleno',
+    fuel_type: 'Petrol',
+    transmission: 'Automatic',
+    engine: { type: 'Naturally Aspirated', cc: 1197, torque: '113 Nm' },
+    features: [ 'Projector Headlamps', 'Apple CarPlay', 'ABS' ],
+    sunroof: false,
+    airbags: 2
+  },
+  {
+    _id: ObjectId('670540b95a84be859ec73bfa'),
+    maker: 'Mahindra',
+    model: 'XUV500',
+    fuel_type: 'Diesel',
+    transmission: 'Manual',
+    engine: { type: 'Turbocharged', cc: 2179, torque: '360 Nm' },
+    features: [ 'All-Wheel Drive', 'Navigation System', 'Cruise Control' ],
+    sunroof: true,
+    airbags: 6
+  },
+  {
+    _id: ObjectId('670540b95a84be859ec73bfb'),
+    maker: 'Honda',
+    model: 'City',
+    fuel_type: 'Petrol',
+    transmission: 'Automatic',
+    engine: { type: 'Naturally Aspirated', cc: 1498, torque: '145 Nm' },
+    features: [ 'Keyless Entry', 'Auto AC', 'Multi-angle Rearview Camera' ],
+    sunroof: false,
+    airbags: 4
+  }
+]
+shubham> db.cars.find({"engine.cc":{$gt:1400}})
+[
+  {
+    _id: ObjectId('670540b95a84be859ec73bf8'),
+    maker: 'Hyundai',
+    model: 'Creta',
+    fuel_type: 'Diesel',
+    transmission: 'Manual',
+    engine: { type: 'Naturally Aspirated', cc: 1493, torque: '250 Nm' },
+    features: [
+      'Sunroof',
+      'Leather Seats',
+      'Wireless Charging',
+      'Ventilated Seats',
+      'Bluetooth'
+    ],
+    sunroof: true,
+    airbags: 6
+  },
+  {
+    _id: ObjectId('670540b95a84be859ec73bfa'),
+    maker: 'Mahindra',
+    model: 'XUV500',
+    fuel_type: 'Diesel',
+    transmission: 'Manual',
+    engine: { type: 'Turbocharged', cc: 2179, torque: '360 Nm' },
+    features: [ 'All-Wheel Drive', 'Navigation System', 'Cruise Control' ],
+    sunroof: true,
+    airbags: 6
+  },
+  {
+    _id: ObjectId('670540b95a84be859ec73bfb'),
+    maker: 'Honda',
+    model: 'City',
+    fuel_type: 'Petrol',
+    transmission: 'Automatic',
+    engine: { type: 'Naturally Aspirated', cc: 1498, torque: '145 Nm' },
+    features: [ 'Keyless Entry', 'Auto AC', 'Multi-angle Rearview Camera' ],
+    sunroof: false,
+    airbags: 4
+  }
+]
+shubham> //$gt= greater than it gives the values greater than the values tha
+t are specified
+
+shubham> db.cars.findOne({"engine.cc":{$in:[1489,2500]}})
+null
+shubham> db.cars.findOne({"engine.cc":{$in:[1498,2179]}})
+{
+  _id: ObjectId('670540b95a84be859ec73bfa'),
+  maker: 'Mahindra',
+  model: 'XUV500',
+  fuel_type: 'Diesel',
+  transmission: 'Manual',
+  engine: { type: 'Turbocharged', cc: 2179, torque: '360 Nm' },
+  features: [ 'All-Wheel Drive', 'Navigation System', 'Cruise Control' ],
+  sunroof: true,
+  airbags: 6
+}
+shubham> db.cars.findOne({"engine.cc":{$in:[1489,2179]}})
+{
+  _id: ObjectId('670540b95a84be859ec73bfa'),
+  maker: 'Mahindra',
+  model: 'XUV500',
+  fuel_type: 'Diesel',
+  transmission: 'Manual',
+  engine: { type: 'Turbocharged', cc: 2179, torque: '360 Nm' },
+  features: [ 'All-Wheel Drive', 'Navigation System', 'Cruise Control' ],
+  sunroof: true,
+  airbags: 6
+}
+shubham> db.cars.findOne({"engine.cc":{$nin:[1489,2179]}})
+{
+  _id: ObjectId('670540b95a84be859ec73bf8'),
+  maker: 'Hyundai',
+  model: 'Creta',
+  fuel_type: 'Diesel',
+  transmission: 'Manual',
+  engine: { type: 'Naturally Aspirated', cc: 1493, torque: '250 Nm' },
+  features: [
+    'Sunroof',
+    'Leather Seats',
+    'Wireless Charging',
+    'Ventilated Seats',
+    'Bluetooth'
+  ],
+  sunroof: true,
+  airbags: 6
+}
+shubham> db.cars.findOne($and:[{fuel_type:"Diesel"},{])
+Uncaught:
+SyntaxError: Unexpected token, expected "," (1:20)
+
+> 1 | db.cars.findOne($and:[{fuel_type:"Diesel"},{])
+    |                     ^
+  2 |
+
+shubham> db.cars.findOne($and:[{fuel_type:"Diesel"},{sunroof:true},{"engine.type":"Turbocharged"}])
+Uncaught:
+SyntaxError: Unexpected token, expected "," (1:20)
+
+> 1 | db.cars.findOne($and:[{fuel_type:"Diesel"},{sunroof:true},{"engine.type":"Turbocharged"}])
+    |                     ^
+  2 |
+
+shubham> db.cars.findOne($and:[{fuel_type:"Diesel"},{"engine.type":"Turbocharged"},{sunroof:true}])
+Uncaught:
+SyntaxError: Unexpected token, expected "," (1:20)
+
+> 1 | db.cars.findOne($and:[{fuel_type:"Diesel"},{"engine.type":"Turbocharged"},{sunroof:true}])
+    |                     ^
+  2 |
+
+shubham> db.cars.find($and:[{fuel_type:"Diesel"},{"engine.type":"Turbocharged"},{sunroof:true}])
+Uncaught:
+SyntaxError: Unexpected token, expected "," (1:17)
+
+> 1 | db.cars.find($and:[{fuel_type:"Diesel"},{"engine.type":"Turbocharged"},{sunroof:true}])
+    |                  ^
+  2 |
+
+shubham> db.cars.find(
+... ka
+... klfnl)
+Uncaught:
+SyntaxError: Unexpected token, expected "," (3:0)
+
+  1 | db.cars.find(
+  2 | ka
+> 3 | klfnl)
+    | ^
+  4 |
+
+shubham> db.cars.find({$and:[{fuel_type:"Diesel"},{"engine.type":"Turbocharged"},{sunroof:true}]})
+[
+  {
+    _id: ObjectId('670540b95a84be859ec73bfa'),
+    maker: 'Mahindra',
+    model: 'XUV500',
+    fuel_type: 'Diesel',
+    transmission: 'Manual',
+    engine: { type: 'Turbocharged', cc: 2179, torque: '360 Nm' },
+    features: [ 'All-Wheel Drive', 'Navigation System', 'Cruise Control' ],
+    sunroof: true,
+    airbags: 6
+  }
+]
+shubham> //this query returns us the data in which both the conditions are matched
+
+shubham> db.cars.find({$or:[{fuel_type:"Diesel"},{"engine.type":"Turbocharged"},{sunroof:true}]})
+[
+  {
+    _id: ObjectId('670540b95a84be859ec73bf8'),
+    maker: 'Hyundai',
+    model: 'Creta',
+    fuel_type: 'Diesel',
+    transmission: 'Manual',
+    engine: { type: 'Naturally Aspirated', cc: 1493, torque: '250 Nm' },
+    features: [
+      'Sunroof',
+      'Leather Seats',
+      'Wireless Charging',
+      'Ventilated Seats',
+      'Bluetooth'
+    ],
+    sunroof: true,
+    airbags: 6
+  },
+  {
+    _id: ObjectId('670540b95a84be859ec73bfa'),
+    maker: 'Mahindra',
+    model: 'XUV500',
+    fuel_type: 'Diesel',
+    transmission: 'Manual',
+    engine: { type: 'Turbocharged', cc: 2179, torque: '360 Nm' },
+    features: [ 'All-Wheel Drive', 'Navigation System', 'Cruise Control' ],
+    sunroof: true,
+    airbags: 6
+  }
+]
+shubham> // there are $and $or $not $nor operators present in mongobd these
+all are the relational operator
+shubham>
+
+shubham>  //the next we will see is $exists which is use to check wheterher the field exists in thwe document or not
+
+shubham> db.cras.find({fuel_type:{$exists:true}})
+
+shubham> db.cars.find({fuel_type:{$exists:true}})
+[
+  {
+    _id: ObjectId('670540b95a84be859ec73bf8'),
+    maker: 'Hyundai',
+    model: 'Creta',
+    fuel_type: 'Diesel',
+    transmission: 'Manual',
+    engine: { type: 'Naturally Aspirated', cc: 1493, torque: '250 Nm' },
+    features: [
+      'Sunroof',
+      'Leather Seats',
+      'Wireless Charging',
+      'Ventilated Seats',
+      'Bluetooth'
+    ],
+    sunroof: true,
+    airbags: 6
+  },
+  {
+    _id: ObjectId('670540b95a84be859ec73bf9'),
+    maker: 'Maruti Suzuki',
+    model: 'Baleno',
+    fuel_type: 'Petrol',
+    transmission: 'Automatic',
+    engine: { type: 'Naturally Aspirated', cc: 1197, torque: '113 Nm' },
+    features: [ 'Projector Headlamps', 'Apple CarPlay', 'ABS' ],
+    sunroof: false,
+    airbags: 2
+  },
+  {
+    _id: ObjectId('670540b95a84be859ec73bfa'),
+    maker: 'Mahindra',
+    model: 'XUV500',
+    fuel_type: 'Diesel',
+    transmission: 'Manual',
+    engine: { type: 'Turbocharged', cc: 2179, torque: '360 Nm' },
+    features: [ 'All-Wheel Drive', 'Navigation System', 'Cruise Control' ],
+    sunroof: true,
+    airbags: 6
+  },
+  {
+    _id: ObjectId('670540b95a84be859ec73bfb'),
+    maker: 'Honda',
+    model: 'City',
+    fuel_type: 'Petrol',
+    transmission: 'Automatic',
+    engine: { type: 'Naturally Aspirated', cc: 1498, torque: '145 Nm' },
+    features: [ 'Keyless Entry', 'Auto AC', 'Multi-angle Rearview Camera' ],
+    sunroof: false,
+    airbags: 4
+  }
+]
+shubham> db.cars.updateOne({model:"Nexon"}),{$set:{color:"red"}}
+MongoInvalidArgumentError: Update document requires atomic operators
+shubham> db.cars.updateOne({model:"Nexon"}),{$set:{color:"red"}}
+MongoInvalidArgumentError: Update document requires atomic operators
+shubham> db.cars.updateOne({model:"Nexon"}),{$set:{color:"red"}})
+Uncaught:
+SyntaxError: Missing semicolon. (1:55)
+
+> 1 | db.cars.updateOne({model:"Nexon"}),{$set:{color:"red"}})
+    |                                                        ^
+  2 |
+
+shubham> db.cars.updateOne({model:"Nexon"},{$set:{color:"red"}})
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 0,
+  modifiedCount: 0,
+  upsertedCount: 0
+}
+shubham> db.cars.find({color:{$exists:true}})
+
+shubham> db.cars.updateOne({model:"City"},{$set:{color:"red"}})
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+shubham> db.cars.find({color:{$exists:true}})
+[
+  {
+    _id: ObjectId('670540b95a84be859ec73bfb'),
+    maker: 'Honda',
+    model: 'City',
+    fuel_type: 'Petrol',
+    transmission: 'Automatic',
+    engine: { type: 'Naturally Aspirated', cc: 1498, torque: '145 Nm' },
+    features: [ 'Keyless Entry', 'Auto AC', 'Multi-angle Rearview Camera' ],
+    sunroof: false,
+    airbags: 4,
+    color: 'red'
+  }
+]
+shubham>  //$type: it is used to filter the content based on BASON type like string bool etc . this can be useful to find field with null values
+
+shubham> db.cars.find({feul_type:{$type:"string"}})
+
+shubham> db.cars.find({fuel_type:{$type:"string"}})
+[
+  {
+    _id: ObjectId('670540b95a84be859ec73bf8'),
+    maker: 'Hyundai',
+    model: 'Creta',
+    fuel_type: 'Diesel',
+    transmission: 'Manual',
+    engine: { type: 'Naturally Aspirated', cc: 1493, torque: '250 Nm' },
+    features: [
+      'Sunroof',
+      'Leather Seats',
+      'Wireless Charging',
+      'Ventilated Seats',
+      'Bluetooth'
+    ],
+    sunroof: true,
+    airbags: 6
+  },
+  {
+    _id: ObjectId('670540b95a84be859ec73bf9'),
+    maker: 'Maruti Suzuki',
+    model: 'Baleno',
+    fuel_type: 'Petrol',
+    transmission: 'Automatic',
+    engine: { type: 'Naturally Aspirated', cc: 1197, torque: '113 Nm' },
+    features: [ 'Projector Headlamps', 'Apple CarPlay', 'ABS' ],
+    sunroof: false,
+    airbags: 2
+  },
+  {
+    _id: ObjectId('670540b95a84be859ec73bfa'),
+    maker: 'Mahindra',
+    model: 'XUV500',
+    fuel_type: 'Diesel',
+    transmission: 'Manual',
+    engine: { type: 'Turbocharged', cc: 2179, torque: '360 Nm' },
+    features: [ 'All-Wheel Drive', 'Navigation System', 'Cruise Control' ],
+    sunroof: true,
+    airbags: 6
+  },
+  {
+    _id: ObjectId('670540b95a84be859ec73bfb'),
+    maker: 'Honda',
+    model: 'City',
+    fuel_type: 'Petrol',
+    transmission: 'Automatic',
+    engine: { type: 'Naturally Aspirated', cc: 1498, torque: '145 Nm' },
+    features: [ 'Keyless Entry', 'Auto AC', 'Multi-angle Rearview Camera' ],
+    sunroof: false,
+    airbags: 4,
+    color: 'red'
+  }
+]
+shubham>  //and if the data type not exists it returns nothings . lets understand ith below example
+
+shubham> db.cars.find({fuel_type:{$type:"int"}})
+
+shubham> // as we can see fuel_type does not contain any type of integer data it returns nothing
+
+shubham> //Array Operators
+
+shubham> /*
+... $size: used to return document that match specified array size
+... $all: returns all document that match the pattern
+... *.
+... */
+
+shubham>  db.cars.find({features:{$size:4}})
+
+shubham>  db.cars.find({features:{$size:3}})
+[
+  {
+    _id: ObjectId('670540b95a84be859ec73bf9'),
+    maker: 'Maruti Suzuki',
+    model: 'Baleno',
+    fuel_type: 'Petrol',
+    transmission: 'Automatic',
+    engine: { type: 'Naturally Aspirated', cc: 1197, torque: '113 Nm' },
+    features: [ 'Projector Headlamps', 'Apple CarPlay', 'ABS' ],
+    sunroof: false,
+    airbags: 2
+  },
+  {
+    _id: ObjectId('670540b95a84be859ec73bfa'),
+    maker: 'Mahindra',
+    model: 'XUV500',
+    fuel_type: 'Diesel',
+    transmission: 'Manual',
+    engine: { type: 'Turbocharged', cc: 2179, torque: '360 Nm' },
+    features: [ 'All-Wheel Drive', 'Navigation System', 'Cruise Control' ],
+    sunroof: true,
+    airbags: 6
+  },
+  {
+    _id: ObjectId('670540b95a84be859ec73bfb'),
+    maker: 'Honda',
+    model: 'City',
+    fuel_type: 'Petrol',
+    transmission: 'Automatic',
+    engine: { type: 'Naturally Aspirated', cc: 1498, torque: '145 Nm' },
+    features: [ 'Keyless Entry', 'Auto AC', 'Multi-angle Rearview Camera' ],
+    sunroof: false,
+    airbags: 4,
+    color: 'red'
+  }
+]
+shubham> // so size works on arary mainly
+
+shubham>  db.cars.find({features:{$all:["Auto AC","Crusie Control"]}})
+
+shubham>  db.cars.find({features:{$all:["Auto AC"]}})
+[
+  {
+    _id: ObjectId('670540b95a84be859ec73bfb'),
+    maker: 'Honda',
+    model: 'City',
+    fuel_type: 'Petrol',
+    transmission: 'Automatic',
+    engine: { type: 'Naturally Aspirated', cc: 1498, torque: '145 Nm' },
+    features: [ 'Keyless Entry', 'Auto AC', 'Multi-angle Rearview Camera' ],
+    sunroof: false,
+    airbags: 4,
+    color: 'red'
+  }
+]
+shubham> //cursor methods
+
+shubham> /*
+... count(): used to count the documents present in the collection syntax:find().count()
+... sort():used to sort the data syntax: find().sort({parameter:1(for ascending)}) -1 for descending
+... limit : syntax: find().limit(2)
+... skip : find().skip(3)
+... */
+
+shubham> db.cars.find().count()
+4
+shubham> db.cars.find().sort()
+[
+  {
+    _id: ObjectId('670540b95a84be859ec73bf8'),
+    maker: 'Hyundai',
+    model: 'Creta',
+    fuel_type: 'Diesel',
+    transmission: 'Manual',
+    engine: { type: 'Naturally Aspirated', cc: 1493, torque: '250 Nm' },
+    features: [
+      'Sunroof',
+      'Leather Seats',
+      'Wireless Charging',
+      'Ventilated Seats',
+      'Bluetooth'
+    ],
+    sunroof: true,
+    airbags: 6
+  },
+  {
+    _id: ObjectId('670540b95a84be859ec73bf9'),
+    maker: 'Maruti Suzuki',
+    model: 'Baleno',
+    fuel_type: 'Petrol',
+    transmission: 'Automatic',
+    engine: { type: 'Naturally Aspirated', cc: 1197, torque: '113 Nm' },
+    features: [ 'Projector Headlamps', 'Apple CarPlay', 'ABS' ],
+    sunroof: false,
+    airbags: 2
+  },
+  {
+    _id: ObjectId('670540b95a84be859ec73bfa'),
+    maker: 'Mahindra',
+    model: 'XUV500',
+    fuel_type: 'Diesel',
+    transmission: 'Manual',
+    engine: { type: 'Turbocharged', cc: 2179, torque: '360 Nm' },
+    features: [ 'All-Wheel Drive', 'Navigation System', 'Cruise Control' ],
+    sunroof: true,
+    airbags: 6
+  },
+  {
+    _id: ObjectId('670540b95a84be859ec73bfb'),
+    maker: 'Honda',
+    model: 'City',
+    fuel_type: 'Petrol',
+    transmission: 'Automatic',
+    engine: { type: 'Naturally Aspirated', cc: 1498, torque: '145 Nm' },
+    features: [ 'Keyless Entry', 'Auto AC', 'Multi-angle Rearview Camera' ],
+    sunroof: false,
+    airbags: 4,
+    color: 'red'
+  }
+]
+shubham> db.cars.find().sort({"Maker":1})
+[
+  {
+    _id: ObjectId('670540b95a84be859ec73bf8'),
+    maker: 'Hyundai',
+    model: 'Creta',
+    fuel_type: 'Diesel',
+    transmission: 'Manual',
+    engine: { type: 'Naturally Aspirated', cc: 1493, torque: '250 Nm' },
+    features: [
+      'Sunroof',
+      'Leather Seats',
+      'Wireless Charging',
+      'Ventilated Seats',
+      'Bluetooth'
+    ],
+    sunroof: true,
+    airbags: 6
+  },
+  {
+    _id: ObjectId('670540b95a84be859ec73bf9'),
+    maker: 'Maruti Suzuki',
+    model: 'Baleno',
+    fuel_type: 'Petrol',
+    transmission: 'Automatic',
+    engine: { type: 'Naturally Aspirated', cc: 1197, torque: '113 Nm' },
+    features: [ 'Projector Headlamps', 'Apple CarPlay', 'ABS' ],
+    sunroof: false,
+    airbags: 2
+  },
+  {
+    _id: ObjectId('670540b95a84be859ec73bfa'),
+    maker: 'Mahindra',
+    model: 'XUV500',
+    fuel_type: 'Diesel',
+    transmission: 'Manual',
+    engine: { type: 'Turbocharged', cc: 2179, torque: '360 Nm' },
+    features: [ 'All-Wheel Drive', 'Navigation System', 'Cruise Control' ],
+    sunroof: true,
+    airbags: 6
+  },
+  {
+    _id: ObjectId('670540b95a84be859ec73bfb'),
+    maker: 'Honda',
+    model: 'City',
+    fuel_type: 'Petrol',
+    transmission: 'Automatic',
+    engine: { type: 'Naturally Aspirated', cc: 1498, torque: '145 Nm' },
+    features: [ 'Keyless Entry', 'Auto AC', 'Multi-angle Rearview Camera' ],
+    sunroof: false,
+    airbags: 4,
+    color: 'red'
+  }
+]
+shubham> db.cars.find().sort({Maker:1})
+[
+  {
+    _id: ObjectId('670540b95a84be859ec73bf8'),
+    maker: 'Hyundai',
+    model: 'Creta',
+    fuel_type: 'Diesel',
+    transmission: 'Manual',
+    engine: { type: 'Naturally Aspirated', cc: 1493, torque: '250 Nm' },
+    features: [
+      'Sunroof',
+      'Leather Seats',
+      'Wireless Charging',
+      'Ventilated Seats',
+      'Bluetooth'
+    ],
+    sunroof: true,
+    airbags: 6
+  },
+  {
+    _id: ObjectId('670540b95a84be859ec73bf9'),
+    maker: 'Maruti Suzuki',
+    model: 'Baleno',
+    fuel_type: 'Petrol',
+    transmission: 'Automatic',
+    engine: { type: 'Naturally Aspirated', cc: 1197, torque: '113 Nm' },
+    features: [ 'Projector Headlamps', 'Apple CarPlay', 'ABS' ],
+    sunroof: false,
+    airbags: 2
+  },
+  {
+    _id: ObjectId('670540b95a84be859ec73bfa'),
+    maker: 'Mahindra',
+    model: 'XUV500',
+    fuel_type: 'Diesel',
+    transmission: 'Manual',
+    engine: { type: 'Turbocharged', cc: 2179, torque: '360 Nm' },
+    features: [ 'All-Wheel Drive', 'Navigation System', 'Cruise Control' ],
+    sunroof: true,
+    airbags: 6
+  },
+  {
+    _id: ObjectId('670540b95a84be859ec73bfb'),
+    maker: 'Honda',
+    model: 'City',
+    fuel_type: 'Petrol',
+    transmission: 'Automatic',
+    engine: { type: 'Naturally Aspirated', cc: 1498, torque: '145 Nm' },
+    features: [ 'Keyless Entry', 'Auto AC', 'Multi-angle Rearview Camera' ],
+    sunroof: false,
+    airbags: 4,
+    color: 'red'
+  }
+]
+shubham> db.cars.find().sort({model:1})
+[
+  {
+    _id: ObjectId('670540b95a84be859ec73bf9'),
+    maker: 'Maruti Suzuki',
+    model: 'Baleno',
+    fuel_type: 'Petrol',
+    transmission: 'Automatic',
+    engine: { type: 'Naturally Aspirated', cc: 1197, torque: '113 Nm' },
+    features: [ 'Projector Headlamps', 'Apple CarPlay', 'ABS' ],
+    sunroof: false,
+    airbags: 2
+  },
+  {
+    _id: ObjectId('670540b95a84be859ec73bfb'),
+    maker: 'Honda',
+    model: 'City',
+    fuel_type: 'Petrol',
+    transmission: 'Automatic',
+    engine: { type: 'Naturally Aspirated', cc: 1498, torque: '145 Nm' },
+    features: [ 'Keyless Entry', 'Auto AC', 'Multi-angle Rearview Camera' ],
+    sunroof: false,
+    airbags: 4,
+    color: 'red'
+  },
+  {
+    _id: ObjectId('670540b95a84be859ec73bf8'),
+    maker: 'Hyundai',
+    model: 'Creta',
+    fuel_type: 'Diesel',
+    transmission: 'Manual',
+    engine: { type: 'Naturally Aspirated', cc: 1493, torque: '250 Nm' },
+    features: [
+      'Sunroof',
+      'Leather Seats',
+      'Wireless Charging',
+      'Ventilated Seats',
+      'Bluetooth'
+    ],
+    sunroof: true,
+    airbags: 6
+  },
+  {
+    _id: ObjectId('670540b95a84be859ec73bfa'),
+    maker: 'Mahindra',
+    model: 'XUV500',
+    fuel_type: 'Diesel',
+    transmission: 'Manual',
+    engine: { type: 'Turbocharged', cc: 2179, torque: '360 Nm' },
+    features: [ 'All-Wheel Drive', 'Navigation System', 'Cruise Control' ],
+    sunroof: true,
+    airbags: 6
+  }
+]
+shubham> db.cars.find({},{_id:0,model:1}).sort({model:1})
+[
+  { model: 'Baleno' },
+  { model: 'City' },
+  { model: 'Creta' },
+  { model: 'XUV500' }
+]
+shubham> db.cars.find().limit()
+MongoInvalidArgumentError: Operation "limit" requires an integer
+shubham> db.cars.find().limit(2)
+[
+  {
+    _id: ObjectId('670540b95a84be859ec73bf8'),
+    maker: 'Hyundai',
+    model: 'Creta',
+    fuel_type: 'Diesel',
+    transmission: 'Manual',
+    engine: { type: 'Naturally Aspirated', cc: 1493, torque: '250 Nm' },
+    features: [
+      'Sunroof',
+      'Leather Seats',
+      'Wireless Charging',
+      'Ventilated Seats',
+      'Bluetooth'
+    ],
+    sunroof: true,
+    airbags: 6
+  },
+  {
+    _id: ObjectId('670540b95a84be859ec73bf9'),
+    maker: 'Maruti Suzuki',
+    model: 'Baleno',
+    fuel_type: 'Petrol',
+    transmission: 'Automatic',
+    engine: { type: 'Naturally Aspirated', cc: 1197, torque: '113 Nm' },
+    features: [ 'Projector Headlamps', 'Apple CarPlay', 'ABS' ],
+    sunroof: false,
+    airbags: 2
+  }
+]
+shubham> db.cars.find().skip(3)
+[
+  {
+    _id: ObjectId('670540b95a84be859ec73bfb'),
+    maker: 'Honda',
+    model: 'City',
+    fuel_type: 'Petrol',
+    transmission: 'Automatic',
+    engine: { type: 'Naturally Aspirated', cc: 1498, torque: '145 Nm' },
+    features: [ 'Keyless Entry', 'Auto AC', 'Multi-angle Rearview Camera' ],
+    sunroof: false,
+    airbags: 4,
+    color: 'red'
+  }
+]
